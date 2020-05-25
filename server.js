@@ -1,21 +1,53 @@
 const express = require('express')
-const path = require('path')
+const bodyParser = require('body-parser')
+const cors = require('cors')
+
 const app = express()
 
-const PORT = process.env.PORT || 5000
-const basicAuth = require('express-basic-auth')
+var corsOptions = {
+  origin: 'http://localhost:8081'
+}
 
-const auth = basicAuth({
-  users: {
-    admin: '123',
-    user: '456'
-  }
-})
+app.use(cors(corsOptions))
 
-app
-  .use(express.static(path.join(__dirname, '/client/build')))
-  .listen(PORT, () => console.log(`Listening on ${PORT}`))
+// parse requests of content-type - application/json
+app.use(bodyParser.json())
 
+// parse requests of content-type - application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }))
+
+// simple route
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '/client/build/index.html'))
+  res.json({ message: 'Welcome to the Paper Telephone app!'})
 })
+
+// set port, listen for requests
+const PORT = process.env.PORT || 8080
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}!!!`)
+})
+
+const db = require('./app/models')
+const Role = db.role
+
+db.sequelize.sync({ force: true }).then(() => {
+  console.log('Drop and Resync Db')
+  initial()
+})
+
+function initial() {
+  Role.create({
+    id: 1,
+    name: 'user'
+  })
+
+  Role.create({
+    id: 2,
+    name: 'moderator'
+  })
+
+  Role.create({
+    id: 3,
+    name: 'admin'
+  })
+}
