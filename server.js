@@ -21,13 +21,13 @@ const db = require('./app/models')
 const Role = db.role
 
 // Use in Production
-db.sequelize.sync()
+// db.sequelize.sync()
 
 // Use in Development
-// db.sequelize.sync({ force: true }).then(() => {
-//   console.log('Drop and Resync Db')
-//   initial()
-// })
+db.sequelize.sync({ force: true }).then(() => {
+  console.log('Drop and Resync Db')
+  initial()
+})
 
 // simple route
 app.get('/', (req, res) => {
