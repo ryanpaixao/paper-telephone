@@ -53,4 +53,4 @@ const verifySignUp = {
   checkRolesExisted: checkRolesExisted
 }
 
-module.export = verifySignUp
+module.exports = verifySignUp
